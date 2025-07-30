@@ -4,35 +4,44 @@ const mongoose = require('mongoose');
 const userschema = mongoose.Schema({
     name: {
         type: String,
-        // required: true
+        default: ""
     },
     email: {
         type: String,
-        // required: true
+        default: ""
     },
     phone: {
         type: String,
-        // required: true
+        default: ""
     },
     otp: {
         type: String
     },
     password: {
         type: String,
-        // required: true
+        default: ""
     },
     age: {
         type: String,
-        // required: true
+        default: ""
     },
     gender: {
         type: String,
-        // required: true
+        default: ""
+    },
+    otp: {
+        type: String,
+        default: ""
+    },
+    expiration_Time: {
+        type: Date,
+       default: ""
     },
     userimage: {
-        type: String
+        type: String,
+        default: ""
     }
-})
+}, { Timestamp: true })
 
 const User = mongoose.model('user', userschema);
 

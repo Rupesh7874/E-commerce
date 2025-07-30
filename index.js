@@ -9,8 +9,6 @@ require('./confige/db')();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-const apiV1routs = require('./routs/index.routs');
-app.use('/api/v1', apiV1routs)
 
 // Middleware to log request details after response is sent
 app.use((req, res, next) => {
@@ -19,6 +17,9 @@ app.use((req, res, next) => {
     });
     next();
 });
+
+const apiV1routs = require('./routs/index.routs');
+app.use('/api/v1', apiV1routs);
 
 const PORT = process.env.PORT || 5000;
 const server = http.createServer(app);
