@@ -2,6 +2,8 @@ const user = require('../models/user.model');
 const { status_codes, status_message } = require('../utils/codeAndmessage');
 const nodemailer = require('nodemailer');
 const bcrypt = require('bcrypt');
+const { generateOTP, sendmail } = require('../utils/send_mail');
+const BASEURL = require('../utils/constant')
 
 exports.sendmail = async (req, res) => {
     try {
@@ -22,40 +24,8 @@ exports.sendmail = async (req, res) => {
                 message: status_message.EMAIL_ALREADY_EXICST,
             });
         }
-
-        const transporter = nodemailer.createTransport({
-            host: "smtp.ethereal.email",
-            port: 587,
-            secure: false, // true for 465, false for other ports
-            auth: {
-                user: "brain.schowalter@ethereal.email",
-                pass: "1BB5wHbuFxQh9d3MZS",
-            },
-        });
-
-        const generateOTP = () => {
-            const otp = Math.floor(1000 + Math.random() * 9000).toString(); // Example OTP generation
-            const expirationMinutes = 1; // Set your desired expiration time
-            const expirationTime = new Date(Date.now() + expirationMinutes * 60 * 1000); // Calculate expiration timestamp
-
-            return { otp, expirationTime };
-        };
         const { otp, expirationTime } = generateOTP();
-        console.log(otp, expirationTime);
-
-
-        // Wrap in an async IIFE so we can use await.
-        (async () => {
-            const info = await transporter.sendMail({
-                from: '"Maddison Foo Koch" <brain.schowalter@ethereal.email>',
-                to: email,
-                subject: "send otp",
-                text: otp, // plain‑text body
-                html: "<b>Hello world?</b>", // HTML body
-            });
-
-            console.log("Message sent:", info.messageId);
-        })();
+        sendmail(email, otp)
 
         const data = await user.create({
             email,
@@ -63,10 +33,10 @@ exports.sendmail = async (req, res) => {
             expiration_Time: expirationTime
         });
 
-        res.status(status_codes.CREATE).json({
+        res.status(status_codes.OK).json({
             success: true,
-            status: status_codes.CREATE,
-            message: "Login successful",
+            status: status_codes.OK,
+            message: status_message.SEND_OTP,
             data: data,
         });
 
@@ -79,6 +49,45 @@ exports.sendmail = async (req, res) => {
         });
     }
 };
+
+exports.resendmail = async (req, res) => {
+    try {
+        const { email } = req.body;
+        if (!email) {
+            return res.status(status_codes.BAD_REQUEST).json({
+                success: false,
+                status: status_codes.BAD_REQUEST,
+                message: status_message.EMAIL_REQUIRED
+            })
+        }
+        const checkmail = await user.findOne({ email });
+        if (!checkmail) {
+            return res.status(status_codes.NOT_FOUND).json({
+                success: false,
+                status: status_codes.NOT_FOUND,
+                message: status_message.EMAIL_NOT_FOUND
+            })
+        }
+        const { otp, expirationTime } = generateOTP()
+        sendmail(email, otp)
+        checkmail.otp = otp
+        checkmail.expiration_Time = expirationTime
+        await checkmail.save()
+        res.status(status_codes.OK).json({
+            success: true,
+            status: status_codes.OK,
+            message: status_message.SEND_OTP,
+            data: checkmail,
+        });
+    } catch (error) {
+        console.error("Login error:", error);
+        res.status(status_codes.INTERNAL_SERVER_ERROR).json({
+            success: false,
+            status: status_codes.INTERNAL_SERVER_ERROR,
+            message: "Internal server error",
+        });
+    }
+}
 
 exports.verifyOTP = async (req, res) => {
     try {
@@ -130,6 +139,7 @@ exports.verifyOTP = async (req, res) => {
         }
         chackmail.otp = null;
         chackmail.expiration_Time = null;
+        chackmail.is_verify = true
         chackmail.save();
 
         res.status(status_codes.CREATE).json({
@@ -207,14 +217,14 @@ exports.ragister = async (req, res) => {
                 message: status_message.GENDER_REQUIRED,
             });
         }
-        if (!userimage) {
-            return res.status(status_codes.NOT_FOUND).json({
-                success: false,
-                status: status_codes.NOT_FOUND,
-                message: status_message.USERIMAGE_REQUIRED,
-            });
-        }
-        const checkmail = await user.findOne({ email });
+        // if (!userimage) {
+        //     return res.status(status_codes.NOT_FOUND).json({
+        //         success: false,
+        //         status: status_codes.NOT_FOUND,
+        //         message: status_message.USERIMAGE_REQUIRED,
+        //     });
+        // }
+        const checkmail = await user.findOne({ email: email, is_verify: true });
         if (!checkmail) {
             return res.status(status_codes.NOT_FOUND).json({
                 success: false,
@@ -222,6 +232,12 @@ exports.ragister = async (req, res) => {
                 message: status_message.EMAIL_NOT_FOUND,
             });
         }
+        // checkmail.name = name
+        // checkmail.email = email
+        // checkmail.password = hashed
+        // checkmail.age = age
+        // checkmail.gender = gender
+        // checkmail.phone = phone
         const hashed = await bcrypt.hash(password, 10);
         const newuser = new user({
             name,
@@ -233,7 +249,12 @@ exports.ragister = async (req, res) => {
             userimage: req.file ? BASEURL + req.file.path.replace(/\\/g, '/') : ''
         })
         const newuserdata = await newuser.save();
-
+        return res.status(status_codes.CREATE).json({
+            newuserdata,
+            success: true,
+            status: status_codes.CREATE,
+            message: status_message.USER_CREATE_SUCCESS,
+        });
     } catch (error) {
         console.error("ragister error:", error);
         return res.status(status_codes.INTERNAL_SERVER_ERROR).json({

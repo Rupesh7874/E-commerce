@@ -35,7 +35,11 @@ const userschema = mongoose.Schema({
     },
     expiration_Time: {
         type: Date,
-       default: ""
+        default: ""
+    },
+    is_verify: {
+        type: Boolean,
+        default: false
     },
     userimage: {
         type: String,
