@@ -21,7 +21,7 @@ app.use((req, res, next) => {
 const apiV1routs = require('./routs/index.routs');
 app.use('/api/v1', apiV1routs);
 
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5000; 
 const server = http.createServer(app);
 
 server.listen(PORT, () => {

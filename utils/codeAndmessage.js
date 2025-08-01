@@ -18,6 +18,8 @@ const status_message = {
     OTP_REQUIRED: "Otp required.",
     EMAIL_REQUIRED: "Email is required.",
     EMAIL_NOT_FOUND: "Email not found.please send mail thru sendmail.",
+    USER_NOT_FOUND: 'User not found',
+    USER_LOGIN_SUCCESS:"User login suceessfully",
     EMAIL_ALREADY_EXICST: "Email alredy exicst.",
     NAME_REQUIRED: "Name is required.",
     PHONE_REQUIRED: "Phone is required.",

@@ -3,7 +3,8 @@ const { status_codes, status_message } = require('../utils/codeAndmessage');
 const nodemailer = require('nodemailer');
 const bcrypt = require('bcrypt');
 const { generateOTP, sendmail } = require('../utils/send_mail');
-const BASEURL = require('../utils/constant')
+const BASEURL = require('../utils/constant');
+const jwt = require('jsonwebtoken');
 
 exports.sendmail = async (req, res) => {
     try {
@@ -232,23 +233,18 @@ exports.ragister = async (req, res) => {
                 message: status_message.EMAIL_NOT_FOUND,
             });
         }
-        // checkmail.name = name
-        // checkmail.email = email
-        // checkmail.password = hashed
-        // checkmail.age = age
-        // checkmail.gender = gender
-        // checkmail.phone = phone
+
         const hashed = await bcrypt.hash(password, 10);
-        const newuser = new user({
-            name,
-            email,
-            password: hashed,
-            age,
-            gender,
-            phone,
-            userimage: req.file ? BASEURL + req.file.path.replace(/\\/g, '/') : ''
-        })
-        const newuserdata = await newuser.save();
+        checkmail.name = name
+        checkmail.email = email
+        checkmail.password = hashed
+        checkmail.age = age
+        checkmail.gender = gender
+        checkmail.phone = phone
+        checkmail.password = hashed
+        checkmail.userimage = req.file ? BASEURL + req.file.path.replace(/\\/g, '/') : ''
+
+        const newuserdata = await checkmail.save();
         return res.status(status_codes.CREATE).json({
             newuserdata,
             success: true,
@@ -257,6 +253,30 @@ exports.ragister = async (req, res) => {
         });
     } catch (error) {
         console.error("ragister error:", error);
+        return res.status(status_codes.INTERNAL_SERVER_ERROR).json({
+            success: false,
+            status: status_codes.INTERNAL_SERVER_ERROR,
+            message: "Internal server error",
+        });
+    }
+}
+exports.login = async (req, res) => {
+    try {
+        const { email, password } = req.body;
+        const checkmail = await user.findOne({ email },{_id});
+        if (!checkmail) {
+            return res.status(status_codes.NOT_FOUND).json({ success: false, status_codes: NOT_FOUND, message: status_message.USER_NOT_FOUND })
+        }
+        const token = jwt.sign({ data: checkmail }, process.env.jwtsecret, { expiresIn: '1h' });
+        return res.status(status_codes.OK).json({
+            checkmail,
+            token,
+            success: true, status: status_codes.OK,
+            message: status_message.USER_LOGIN_SUCCESS
+        });
+
+    } catch (error) {
+        console.error("login error:", error);
         return res.status(status_codes.INTERNAL_SERVER_ERROR).json({
             success: false,
             status: status_codes.INTERNAL_SERVER_ERROR,

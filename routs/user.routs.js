@@ -1,6 +1,6 @@
 const express = require('express');
 const routs = express.Router();
-const { sendmail, verifyOTP, ragister, resendmail } = require('../controllers/user.controller');
+const { sendmail, verifyOTP, ragister, resendmail, login } = require('../controllers/user.controller');
 const multer = require('multer');
 
 //multer-code
@@ -18,6 +18,7 @@ const upload = multer({ storage: storage })
 routs.post('/sendmail', sendmail);
 routs.post('/verifyOTP', verifyOTP);
 routs.post('/ragister', upload.single('userimage'), ragister);
-routs.post('/resendmail',resendmail)
+routs.post('/resendmail', resendmail);
+routs.post('/login', login);
 
 module.exports = routs; 
