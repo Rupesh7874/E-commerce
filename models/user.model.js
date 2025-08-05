@@ -29,22 +29,26 @@ const userschema = mongoose.Schema({
         type: String,
         default: ""
     },
-    otp: {
-        type: String,
-        default: ""
-    },
-    expiration_Time: {
-        type: Date,
-        default: ""
-    },
+    // otp: {
+    //     type: String,
+    //     default: ""
+    // },
+    // expiration_Time: {
+    //     type: Date,
+    //     default: ""
+    // },
+    otp_history: [{
+        otp: String,
+        expiration_Time: String,
+        otp_verify: {
+            type: Boolean,
+            default: false
+        },
+    }],
     roles: {
         type: String,
         enum: ['user', 'seller'],
         default: 'user'
-    },
-    is_verify: {
-        type: Boolean,
-        default: false
     },
     ragistered: {
         type: Boolean,

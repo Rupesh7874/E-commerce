@@ -30,8 +30,10 @@ exports.sendmail = async (req, res) => {
 
         const data = await user.create({
             email,
-            otp: otp,
-            expiration_Time: expirationTime
+            otp_history: [{
+                otp: otp,
+                expiration_Time: expirationTime
+            }]
         });
 
         res.status(status_codes.OK).json({
@@ -110,45 +112,51 @@ exports.verifyOTP = async (req, res) => {
         }
 
         const chackmail = await user.findOne({ email: email });
+        console.log(chackmail);
+        
+        const dbotp = chackmail.otp_history.otp
+        console.log(dbotp);
+        
+        //  const checkotp = await user.findOne({ otp: otp });
         // console.log(chackmail);
 
-        if (!chackmail) {
-            return res.status(status_codes.BAD_REQUEST).json({
-                success: false,
-                status: status_codes.BAD_REQUEST,
-                message: status_message.PHONE_NOT_FOUND,
-            });
-        }
-        // const checkotp = await user.findOne({ otp: otp });
-        if (otp !== chackmail.otp) {
-            return res.status(status_codes.BAD_REQUEST).json({
-                success: false,
-                status: status_codes.BAD_REQUEST,
-                message: status_message.INVALID_OTP,
-            });
-        }
-        const naw = new Date();
-        // console.log(naw);
-        // console.log(chackmail.expirationTime);
+        // if (!chackmail) {
+        //     return res.status(status_codes.BAD_REQUEST).json({
+        //         success: false,
+        //         status: status_codes.BAD_REQUEST,
+        //         message: status_message.PHONE_NOT_FOUND,
+        //     });
+        // }
+        // // const checkotp = await user.findOne({ otp: otp });
+        // if (otp !== chackmail.otp) {
+        //     return res.status(status_codes.BAD_REQUEST).json({
+        //         success: false,
+        //         status: status_codes.BAD_REQUEST,
+        //         message: status_message.INVALID_OTP,
+        //     });
+        // }
+        // const naw = new Date();
+        // // console.log(naw);
+        // // console.log(chackmail.expirationTime);
 
-        if (naw > chackmail.expiration_Time) {
-            return res.status(status_codes.BAD_REQUEST).json({
-                success: false,
-                status: status_codes.BAD_REQUEST,
-                message: status_message.OTP_EXPIRE,
-            });
-        }
-        chackmail.otp = null;
-        chackmail.expiration_Time = null;
-        chackmail.is_verify = true
-        chackmail.save();
+        // if (naw > chackmail.expiration_Time) {
+        //     return res.status(status_codes.BAD_REQUEST).json({
+        //         success: false,
+        //         status: status_codes.BAD_REQUEST,
+        //         message: status_message.OTP_EXPIRE,
+        //     });
+        // }
+        // chackmail.otp = null;
+        // chackmail.expiration_Time = null;
+        // chackmail.otp_verify = true
+        // chackmail.save();
 
-        res.status(status_codes.CREATE).json({
-            success: true,
-            status: status_codes.OK,
-            message: status_message.OTP_VERIFY,
-            data: chackmail,
-        });
+        // res.status(status_codes.CREATE).json({
+        //     success: true,
+        //     status: status_codes.OK,
+        //     message: status_message.OTP_VERIFY,
+        //     data: chackmail,
+        // });
     } catch (error) {
         console.error("verifyotp error:", error);
         res.status(status_codes.INTERNAL_SERVER_ERROR).json({
@@ -227,7 +235,7 @@ exports.ragister = async (req, res) => {
                 message: status_message.GENDER_REQUIRED,
             });
         }
-        const checkmail = await user.findOne({ email: email, is_verify: true });
+        const checkmail = await user.findOne({ email: email, otp_verify: true });
         if (!checkmail) {
             return res.status(status_codes.NOT_FOUND).json({
                 success: false,
