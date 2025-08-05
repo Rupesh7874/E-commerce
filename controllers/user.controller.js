@@ -162,6 +162,15 @@ exports.verifyOTP = async (req, res) => {
 exports.ragister = async (req, res) => {
     try {
         const { name, email, password, phone, confirmpassword, age, gender, userimage } = req.body;
+
+        const checkragister = await user.findOne({ email: email, ragistered: true })
+        if (checkragister) {
+            return res.status(status_codes.BAD_REQUEST).json({
+                success: false,
+                status: status_codes.BAD_REQUEST,
+                message: status_message.USER_ALREADY_RAGISTER,
+            });
+        }
         if (!name) {
             return res.status(status_codes.NOT_FOUND).json({
                 success: false,
@@ -218,13 +227,6 @@ exports.ragister = async (req, res) => {
                 message: status_message.GENDER_REQUIRED,
             });
         }
-        // if (!userimage) {
-        //     return res.status(status_codes.NOT_FOUND).json({
-        //         success: false,
-        //         status: status_codes.NOT_FOUND,
-        //         message: status_message.USERIMAGE_REQUIRED,
-        //     });
-        // }
         const checkmail = await user.findOne({ email: email, is_verify: true });
         if (!checkmail) {
             return res.status(status_codes.NOT_FOUND).json({
@@ -243,6 +245,7 @@ exports.ragister = async (req, res) => {
         checkmail.phone = phone
         checkmail.password = hashed
         checkmail.userimage = req.file ? BASEURL + req.file.path.replace(/\\/g, '/') : ''
+        checkmail.ragistered = true
 
         const newuserdata = await checkmail.save();
         return res.status(status_codes.CREATE).json({
@@ -263,7 +266,7 @@ exports.ragister = async (req, res) => {
 exports.login = async (req, res) => {
     try {
         const { email, password } = req.body;
-        const checkmail = await user.findOne({ email },{_id});
+        const checkmail = await user.findOne({ email }, { _id });
         if (!checkmail) {
             return res.status(status_codes.NOT_FOUND).json({ success: false, status_codes: NOT_FOUND, message: status_message.USER_NOT_FOUND })
         }

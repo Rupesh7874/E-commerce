@@ -37,7 +37,16 @@ const userschema = mongoose.Schema({
         type: Date,
         default: ""
     },
+    roles: {
+        type: String,
+        enum: ['user', 'seller'],
+        default: 'user'
+    },
     is_verify: {
+        type: Boolean,
+        default: false
+    },
+    ragistered: {
         type: Boolean,
         default: false
     },

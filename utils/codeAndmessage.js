@@ -22,6 +22,7 @@ const status_message = {
     USER_LOGIN_SUCCESS:"User login suceessfully",
     EMAIL_ALREADY_EXICST: "Email alredy exicst.",
     NAME_REQUIRED: "Name is required.",
+    USER_ALREADY_RAGISTER:"User already ragister",
     PHONE_REQUIRED: "Phone is required.",
     AGE_REQUIRED: "Age is required.",
     GENDER_REQUIRED: "Gender is required.",
@@ -29,7 +30,13 @@ const status_message = {
     PASSWORD_REQUIRED: "Password is required.",
     NOT_SAME__PASSWORD: "Password and Confirmpass are not same.",
     CONFIRM_PASSWORD: "Confirm password is required.",
-    USER_CREATE_SUCCESS: "User create successfully."
+    USER_CREATE_SUCCESS: "User create successfully.",
+    PRODUCT_NAME_REQUIRE:"Product name is require",
+    PRODUCT_PRICE_REQUIRE:"Product price is require",
+    DESCRIPTION_REQUIRE:"Description is require",
+    CATEGORY_REQUIRE:"Category is require",
+    PRODUCT_NOT_CREATE:"Product not create",
+    PRODUCT_CREATE_SUCCESS:"Product create sucessfully"
 }
 
 
