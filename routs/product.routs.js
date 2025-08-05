@@ -1,6 +1,6 @@
 const express = require('express');
 const routs = express.Router();
-const { addproduct } = require('../controllers/seller.controller');
+const { addproduct, deleteproduct, updateproduct } = require('../controllers/product.controller');
 const multer = require('multer');
 
 //multer-code
@@ -17,6 +17,8 @@ const upload = multer({ storage: storage })
 
 
 routs.post('/addproduct', upload.single('productimage'), addproduct);
+routs.delete('/deleteproduct', deleteproduct);
+routs.put('/updateproduct', upload.single('productimage'), updateproduct);
 
 
 module.exports = routs;

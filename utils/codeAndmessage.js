@@ -19,10 +19,10 @@ const status_message = {
     EMAIL_REQUIRED: "Email is required.",
     EMAIL_NOT_FOUND: "Email not found.please send mail thru sendmail.",
     USER_NOT_FOUND: 'User not found',
-    USER_LOGIN_SUCCESS:"User login suceessfully",
+    USER_LOGIN_SUCCESS: "User login suceessfully",
     EMAIL_ALREADY_EXICST: "Email alredy exicst.",
     NAME_REQUIRED: "Name is required.",
-    USER_ALREADY_RAGISTER:"User already ragister",
+    USER_ALREADY_RAGISTER: "User already ragister",
     PHONE_REQUIRED: "Phone is required.",
     AGE_REQUIRED: "Age is required.",
     GENDER_REQUIRED: "Gender is required.",
@@ -31,12 +31,15 @@ const status_message = {
     NOT_SAME__PASSWORD: "Password and Confirmpass are not same.",
     CONFIRM_PASSWORD: "Confirm password is required.",
     USER_CREATE_SUCCESS: "User create successfully.",
-    PRODUCT_NAME_REQUIRE:"Product name is require",
-    PRODUCT_PRICE_REQUIRE:"Product price is require",
-    DESCRIPTION_REQUIRE:"Description is require",
-    CATEGORY_REQUIRE:"Category is require",
-    PRODUCT_NOT_CREATE:"Product not create",
-    PRODUCT_CREATE_SUCCESS:"Product create sucessfully"
+    PRODUCT_NAME_REQUIRE: "Product name is require.",
+    PRODUCT_PRICE_REQUIRE: "Product price is require.",
+    DESCRIPTION_REQUIRE: "Description is require.",
+    CATEGORY_REQUIRE: "Category is require.",
+    PRODUCT_NOT_CREATE: "Product not create.",
+    PRODUCT_CREATE_SUCCESS: "Product create sucessfully.",
+    PRODUCT_ALREDY_EXISCT: "Product alredy exisct.",
+    PRODUCT_NOT_DELETE: "Product not delete.",
+    PRODUCT_DELETE_SUCCESS: "Product delete successfully."
 }
 
 
