@@ -1,9 +1,12 @@
+const { access } = require("fs")
+
 const status_codes = {
     OK: 201,
     CREATE: 200,
     NOT_FOUND: 404,
     BAD_REQUEST: 400,
-    INTERNAL_SERVER_ERROR: 500
+    INTERNAL_SERVER_ERROR: 500,
+    UNAUTHORIZED: 401
 }
 const status_message = {
     OK: "Create",
@@ -28,6 +31,7 @@ const status_message = {
     GENDER_REQUIRED: "Gender is required.",
     USERIMAGE_REQUIRED: "User image is required.",
     PASSWORD_REQUIRED: "Password is required.",
+    INVALID_PASSWORD: "Invalid password",
     NOT_SAME__PASSWORD: "Password and Confirmpass are not same.",
     CONFIRM_PASSWORD: "Confirm password is required.",
     USER_CREATE_SUCCESS: "User create successfully.",
@@ -39,7 +43,9 @@ const status_message = {
     PRODUCT_CREATE_SUCCESS: "Product create sucessfully.",
     PRODUCT_ALREDY_EXISCT: "Product alredy exisct.",
     PRODUCT_NOT_DELETE: "Product not delete.",
-    PRODUCT_DELETE_SUCCESS: "Product delete successfully."
+    PRODUCT_DELETE_SUCCESS: "Product delete successfully.",
+    MISSING_TOKEN: "Token is missing, token is required",
+    INVALID_TOKEN: "Invalid token"
 }
 
 

@@ -274,11 +274,16 @@ exports.ragister = async (req, res) => {
 exports.login = async (req, res) => {
     try {
         const { email, password } = req.body;
-        const checkmail = await user.findOne({ email }, { _id });
+        const checkmail = await user.findOne({ email });
         if (!checkmail) {
-            return res.status(status_codes.NOT_FOUND).json({ success: false, status_codes: NOT_FOUND, message: status_message.USER_NOT_FOUND })
+            return res.status(status_codes.NOT_FOUND).json({ success: false, status:status_codes.NOT_FOUND, message: status_message.USER_NOT_FOUND })
         }
-        const token = jwt.sign({ data: checkmail }, process.env.jwtsecret, { expiresIn: '1h' });
+        const chackpassword = await bcrypt.compare(password, checkmail.password);
+        if(!chackpassword){
+             return res.status(status_codes.BAD_REQUEST).json({ success: false, status:status_codes.BAD_REQUEST, message: status_message.INVALID_PASSWORD })
+        }
+
+        const token = jwt.sign({ data: checkmail.id }, process.env.jwtsecret, { expiresIn: '1h' });
         return res.status(status_codes.OK).json({
             checkmail,
             token,
