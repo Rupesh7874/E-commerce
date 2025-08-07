@@ -45,7 +45,9 @@ const status_message = {
     PRODUCT_NOT_DELETE: "Product not delete.",
     PRODUCT_DELETE_SUCCESS: "Product delete successfully.",
     MISSING_TOKEN: "Token is missing, token is required",
-    INVALID_TOKEN: "Invalid token"
+    INVALID_TOKEN: "Invalid token",
+    MAXIMUM_OTP_ATTEMPTS: "You’ve reached the maximum number of attempts. Please try again after 12 hours.",
+    OTP_VALIDATION: "Please try again after 12 hours."
 }
 
 

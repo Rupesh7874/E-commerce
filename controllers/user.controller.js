@@ -25,14 +25,15 @@ exports.sendmail = async (req, res) => {
                 message: status_message.EMAIL_ALREADY_EXICST,
             });
         }
-        const { otp, expirationTime } = generateOTP();
+        const { otp, expirationTime, generate_time } = generateOTP();
         sendmail(email, otp)
 
         const data = await user.create({
             email,
             otp_history: [{
                 otp: otp,
-                expiration_Time: expirationTime
+                expiration_Time: expirationTime,
+                generate_time: generate_time
             }]
         });
 
@@ -64,6 +65,8 @@ exports.resendmail = async (req, res) => {
             })
         }
         const checkmail = await user.findOne({ email });
+        // console.log(checkmail);
+
         if (!checkmail) {
             return res.status(status_codes.NOT_FOUND).json({
                 success: false,
@@ -73,9 +76,33 @@ exports.resendmail = async (req, res) => {
         }
         const { otp, expirationTime } = generateOTP()
         sendmail(email, otp)
-        checkmail.otp = otp
-        checkmail.expiration_Time = expirationTime
-        await checkmail.save()
+
+        if (checkmail.otp_history.length >= 5) {
+            return res.status(status_codes.NOT_FOUND).json({
+                success: false,
+                status: status_codes.NOT_FOUND,
+                message: status_message.MAXIMUM_OTP_ATTEMPTS
+            })
+        }
+        // const db_otp = checkmail.otp_history
+        // const letestotp = db_otp[db_otp.length - 1];
+        // const letest_time = new Date();
+        // const twelveHoursInMs = 12 * 60 * 60 * 1000;
+        // const lastOtpexpiration_Time = new Date(letestotp.expiration_Time);
+
+
+        // if (letest_time.getTime() > lastOtpexpiration_Time.getTime() + twelveHoursInMs) {
+        //     return res.status(status_codes.BAD_REQUEST).json({
+        //         success: false,
+        //         status: status_codes.BAD_REQUEST,
+        //         message: status_message.OTP_VALIDATION
+        //     })
+        // }
+        checkmail.otp_history.push({
+            otp: otp,
+            expiration_Time: expirationTime
+        })
+        await checkmail.save();
         res.status(status_codes.OK).json({
             success: true,
             status: status_codes.OK,
@@ -112,13 +139,13 @@ exports.verifyOTP = async (req, res) => {
         }
 
         const chackmail = await user.findOne({ email: email });
-        console.log(chackmail);
-        
-        const dbotp = chackmail.otp_history.otp
-        console.log(dbotp);
-        
-        //  const checkotp = await user.findOne({ otp: otp });
-        // console.log(chackmail);
+
+        const db_otp = chackmail.otp_history
+        const letestotp = db_otp[db_otp.length - 1];
+        console.log(letestotp.otp);
+
+        const checkotp = await user.findOne({ "otp_history.otp": letestotp.otp, "otp_history.otp_verify": false });
+        console.log(checkotp);
 
         // if (!chackmail) {
         //     return res.status(status_codes.BAD_REQUEST).json({
@@ -276,11 +303,11 @@ exports.login = async (req, res) => {
         const { email, password } = req.body;
         const checkmail = await user.findOne({ email });
         if (!checkmail) {
-            return res.status(status_codes.NOT_FOUND).json({ success: false, status:status_codes.NOT_FOUND, message: status_message.USER_NOT_FOUND })
+            return res.status(status_codes.NOT_FOUND).json({ success: false, status: status_codes.NOT_FOUND, message: status_message.USER_NOT_FOUND })
         }
         const chackpassword = await bcrypt.compare(password, checkmail.password);
-        if(!chackpassword){
-             return res.status(status_codes.BAD_REQUEST).json({ success: false, status:status_codes.BAD_REQUEST, message: status_message.INVALID_PASSWORD })
+        if (!chackpassword) {
+            return res.status(status_codes.BAD_REQUEST).json({ success: false, status: status_codes.BAD_REQUEST, message: status_message.INVALID_PASSWORD })
         }
 
         const token = jwt.sign({ data: checkmail.id }, process.env.jwtsecret, { expiresIn: '1h' });

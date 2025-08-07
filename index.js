@@ -6,6 +6,7 @@ const path = require('path');
 
 dotenv.config();
 require('./confige/db')();
+require('./utils/cron');
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));

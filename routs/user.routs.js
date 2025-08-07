@@ -19,7 +19,7 @@ const upload = multer({ storage: storage })
 routs.post('/sendmail', sendmail);
 routs.post('/verifyOTP', verifyOTP);
 routs.post('/ragister', upload.single('userimage'), ragister);
-routs.post('/resendmail', Verifytoken, resendmail);
+routs.post('/resendmail', resendmail);
 routs.post('/login', login);
 
 module.exports = routs; 

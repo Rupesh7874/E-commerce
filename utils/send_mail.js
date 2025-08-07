@@ -1,12 +1,14 @@
 const nodemailer = require('nodemailer');
 
 function generateOTP() {
-    const otp = Math.floor(1000 + Math.random() * 9000).toString(); // Example OTP generation
-    const expirationMinutes = 1; // Set your desired expiration time
-    const expirationTime = new Date(Date.now() + expirationMinutes * 60 * 1000); // Calculate expiration timestamp
+    const otp = Math.floor(1000 + Math.random() * 9000).toString();
+    const generate_time = new Date();
+    const expirationMinutes = 1;
+    const expirationTime = new Date(generate_time.getTime() + expirationMinutes * 60 * 1000);
 
-    return { otp, expirationTime };
+    return { otp, generate_time, expirationTime }; // all are Date objects
 }
+
 
 
 function sendmail(email, otp) {

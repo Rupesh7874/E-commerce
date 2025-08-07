@@ -39,11 +39,15 @@ const userschema = mongoose.Schema({
     // },
     otp_history: [{
         otp: String,
-        expiration_Time: String,
+        expiration_Time: Date,
         otp_verify: {
             type: Boolean,
-            default: false
+            default: false,
         },
+        generate_time: {
+            type: Date,
+            default: Date.now
+        }
     }],
     roles: {
         type: String,
