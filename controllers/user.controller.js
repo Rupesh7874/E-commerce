@@ -139,51 +139,60 @@ exports.verifyOTP = async (req, res) => {
         }
 
         const chackmail = await user.findOne({ email: email });
+        // console.log("chackmail",chackmail.otp_history.expiration_Time);
 
         const db_otp = chackmail.otp_history
         const letestotp = db_otp[db_otp.length - 1];
-        console.log(letestotp.otp);
+        // console.log(letestotp.otp);
 
-        const checkotp = await user.findOne({ "otp_history.otp": letestotp.otp, "otp_history.otp_verify": false });
-        console.log(checkotp);
 
-        // if (!chackmail) {
-        //     return res.status(status_codes.BAD_REQUEST).json({
-        //         success: false,
-        //         status: status_codes.BAD_REQUEST,
-        //         message: status_message.PHONE_NOT_FOUND,
-        //     });
-        // }
-        // // const checkotp = await user.findOne({ otp: otp });
-        // if (otp !== chackmail.otp) {
-        //     return res.status(status_codes.BAD_REQUEST).json({
-        //         success: false,
-        //         status: status_codes.BAD_REQUEST,
-        //         message: status_message.INVALID_OTP,
-        //     });
-        // }
-        // const naw = new Date();
-        // // console.log(naw);
-        // // console.log(chackmail.expirationTime);
+        if (!chackmail) {
+            return res.status(status_codes.BAD_REQUEST).json({
+                success: false,
+                status: status_codes.BAD_REQUEST,
+                message: status_message.PHONE_NOT_FOUND,
+            });
+        }
 
-        // if (naw > chackmail.expiration_Time) {
+        if (otp !== letestotp.otp) {
+            return res.status(status_codes.BAD_REQUEST).json({
+                success: false,
+                status: status_codes.BAD_REQUEST,
+                message: status_message.INVALID_OTP,
+            });
+        }
+        const naw = new Date();
+        // console.log(naw);
+        // console.log(letestotp);
+
+        // if (naw > letestotp.expiration_Time) {
         //     return res.status(status_codes.BAD_REQUEST).json({
         //         success: false,
         //         status: status_codes.BAD_REQUEST,
         //         message: status_message.OTP_EXPIRE,
         //     });
         // }
-        // chackmail.otp = null;
-        // chackmail.expiration_Time = null;
-        // chackmail.otp_verify = true
-        // chackmail.save();
 
-        // res.status(status_codes.CREATE).json({
-        //     success: true,
-        //     status: status_codes.OK,
-        //     message: status_message.OTP_VERIFY,
-        //     data: chackmail,
-        // });
+        const data = chackmail.otp_history;
+        const otpdata = data.map(tt => {
+            tt.otp = null,
+            tt.expiration_Time = null;
+            return tt
+        });
+        console.log("otpdata", otpdata);
+
+
+        // chackmail.otp_history.otp = null;
+        // chackmail.otp_history.expiration_Time = null;
+        // chackmail.otp_history.otp_verify = true
+        chackmail.save();
+
+        res.status(status_codes.CREATE).json({
+            success: true,
+            status: status_codes.OK,
+            message: status_message.OTP_VERIFY,
+            data: chackmail,
+        });
     } catch (error) {
         console.error("verifyotp error:", error);
         res.status(status_codes.INTERNAL_SERVER_ERROR).json({

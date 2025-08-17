@@ -47,7 +47,9 @@ const status_message = {
     MISSING_TOKEN: "Token is missing, token is required",
     INVALID_TOKEN: "Invalid token",
     MAXIMUM_OTP_ATTEMPTS: "You’ve reached the maximum number of attempts. Please try again after 12 hours.",
-    OTP_VALIDATION: "Please try again after 12 hours."
+    OTP_VALIDATION: "Please try again after 12 hours.",
+    CATEGORY_ALREADY_EXISCT: "Category already exisct",
+    CATEGORY_NOT_SAVE: "Category not save"
 }
 
 

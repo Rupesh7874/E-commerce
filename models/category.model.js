@@ -6,7 +6,7 @@ const { default: mongoose } = require('mongoose');
 
 
 const categoryschema = mongoose.Schema({
-    name: {
+    category_name: {
         type: String,
         required: true
     },
@@ -16,13 +16,13 @@ const categoryschema = mongoose.Schema({
     },
     categoryimage: {
         type: String,
-        required: true
+        // required: true
     },
     isActive: {
-        type: String,
-        required: true
-    },
-}, { Timestamp: true });
+        type: Boolean,
+        default: true
+    }
+}, { timestamps: true });
 
 const category = mongoose.model('category', categoryschema);
 
