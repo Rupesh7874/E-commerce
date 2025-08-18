@@ -19,6 +19,6 @@ routs.post('/addcategory', upload.single('categoryimage'), categorycontroller.ad
 routs.get('/viewAllCategory', categorycontroller.viewAllCategory);
 routs.put('/updatecategory', upload.single('categoryimage'), categorycontroller.updatecategory)
 routs.patch('/isactivedeactive', categorycontroller.isactivedeactive);
-routs.delete('/deletecategory', categorycontroller.deletecategory)
+routs.delete('/deletecategoryById', categorycontroller.deletecategoryById)
 
 module.exports = routs;

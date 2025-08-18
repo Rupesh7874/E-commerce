@@ -166,7 +166,7 @@ exports.isactivedeactive = async (req, res) => {
 }
 
 
-exports.deletecategory = async (req, res) => {
+exports.deletecategoryById = async (req, res) => {
     try {
         const { category_Id } = req.query;
         const checkdata = await categorymodel.findById(category_Id);
