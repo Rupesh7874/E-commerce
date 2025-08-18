@@ -48,8 +48,14 @@ const status_message = {
     INVALID_TOKEN: "Invalid token",
     MAXIMUM_OTP_ATTEMPTS: "You’ve reached the maximum number of attempts. Please try again after 12 hours.",
     OTP_VALIDATION: "Please try again after 12 hours.",
-    CATEGORY_ALREADY_EXISCT: "Category already exisct",
-    CATEGORY_NOT_SAVE: "Category not save"
+    CATEGORY_ALREADY_EXISCT: "Category already exisct.",
+    CATEGORY_CREATE_SUCCESS: "Category create sucessfully.",
+    CATEGORY_NOT_SAVE: "Category not save.",
+    CATEGORY_NAME_REQUIRE: "Category name is require.",
+    CATEGORY_NOT_UPDATE: "Category not update.",
+    CATEGORY_UPDATE_SUCESSFULLY: "Category update sucessfully.",
+    CATEGORY_STATUS_UPDATE: "Category data update sucessfully.",
+    CATEGORY_DELETE_SUCCESS:"Category dalete sucessfully."
 }
 
 

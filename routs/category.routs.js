@@ -16,7 +16,9 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage })
 
 routs.post('/addcategory', upload.single('categoryimage'), categorycontroller.addcategory);
-routs.post('/viewAllCategory',categorycontroller.viewAllCategory);
-
+routs.get('/viewAllCategory', categorycontroller.viewAllCategory);
+routs.put('/updatecategory', upload.single('categoryimage'), categorycontroller.updatecategory)
+routs.patch('/isactivedeactive', categorycontroller.isactivedeactive);
+routs.delete('/deletecategory', categorycontroller.deletecategory)
 
 module.exports = routs;
