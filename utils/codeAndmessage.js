@@ -50,12 +50,19 @@ const status_message = {
     OTP_VALIDATION: "Please try again after 12 hours.",
     CATEGORY_ALREADY_EXISCT: "Category already exisct.",
     CATEGORY_CREATE_SUCCESS: "Category create sucessfully.",
+    SUBCATEGORY_CREATE_SUCCESS: "Subcategory create sucessfully.",
     CATEGORY_NOT_SAVE: "Category not save.",
+    SUBCATEGORY_NOT_SAVE: "Subcategory not save.",
     CATEGORY_NAME_REQUIRE: "Category name is require.",
     CATEGORY_NOT_UPDATE: "Category not update.",
+    CATEGORY_GET_SUCCESS:"Categorydata get sucessfully",
+    SUBCATEGORY_GET_SUCCESS:"Subcategorydata get sucessfully",
     CATEGORY_UPDATE_SUCESSFULLY: "Category update sucessfully.",
     CATEGORY_STATUS_UPDATE: "Category data update sucessfully.",
-    CATEGORY_DELETE_SUCCESS:"Category dalete sucessfully."
+    CATEGORY_DELETE_SUCCESS:"Category dalete sucessfully.",
+    SUBCATEGORY_NAME_REQUIRE:"Subcategory name is require.",
+    SUBCATEGORY_ALREADY_EXISCT:"Subcategory already exisct.",
+    SUBCATEGORY_NOT_FOUND:"Subcategory data not found."
 }
 
 

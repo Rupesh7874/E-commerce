@@ -80,7 +80,7 @@ exports.viewAllCategory = async (req, res) => {
             totaldata,
             success: true,
             status: status_codes.CREATE,
-            message: status_message.CATEGORY_CREATE_SUCESSFULLY
+            message: status_message.CATEGORY_GET_SUCCESS
         });
     } catch (error) {
         console.error("viewAllCategory error:", error);
