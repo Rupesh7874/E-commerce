@@ -1,4 +1,4 @@
-const mongoose=require('mongoose');
+const mongoose = require('mongoose');
 
 const subcategoryschema = mongoose.Schema({
     subcategory_name: {
@@ -8,6 +8,10 @@ const subcategoryschema = mongoose.Schema({
     description: {
         type: String,
         required: true
+    },
+    categoryId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "category"
     },
     // subcategoryimage: {
     //     type: String,
