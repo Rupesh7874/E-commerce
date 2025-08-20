@@ -39,6 +39,7 @@ const status_message = {
     PRODUCT_PRICE_REQUIRE: "Product price is require.",
     DESCRIPTION_REQUIRE: "Description is require.",
     CATEGORY_REQUIRE: "Category is require.",
+    SUBCATEGORY_REQUIRE:"Subcategory is require",
     CATEGORY_ID_REQUIRE:"Category id is require",
     PRODUCT_NOT_CREATE: "Product not create.",
     PRODUCT_CREATE_SUCCESS: "Product create sucessfully.",
@@ -68,7 +69,9 @@ const status_message = {
     SUBCATEGORY_DELETE_SUCCESS:"Subcategory data delete.",
     SUBCATEGORY_NOT_UPDATE:"Subcatgory not update",
     SUBCATEGORY_UPDATE_SUCCESS:"Subcategory data update successfully",
-    SUBCATEGORY_IS_REQUIRE:"Subcategory id is require."
+    SUBCATEGORY_IS_REQUIRE:"Subcategory id is require.",
+    PRODUCT_NOT_UPDATE:"Product not update",
+    PRODUCT_UPDATE_SUCCESS:'Product update sucessfully.'
 }
 
 

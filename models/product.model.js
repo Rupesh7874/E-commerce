@@ -18,15 +18,23 @@ const productschema = mongoose.Schema({
     discountPrice: {
         type: String,
         // required: true
-        default:""
+        default: ""
     },
     productimage: {
         type: String,
         // required:true
     },
-    category: {
-        type: String,
-        // required: true
+    categoryId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref:'category'
+    },
+    subcategoryId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref:"subcategory"
+    },
+    isActive: {
+        type: Boolean,
+        default: false
     }
 }, { Timestamp: true });
 

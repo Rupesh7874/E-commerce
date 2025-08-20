@@ -6,7 +6,7 @@ const fs = require('fs');
 
 exports.addproduct = async (req, res) => {
     try {
-        const { productname, price, description, discountPrice, productimage, category } = req.body;
+        const { productname, price, description, discountPrice, productimage, categoryId, subcategoryId } = req.body;
         const checkproduct = await productmodel.findOne({ productname });
         if (checkproduct) {
             return res.status(status_codes.BAD_REQUEST).json({
@@ -36,11 +36,18 @@ exports.addproduct = async (req, res) => {
                 message: status_message.DESCRIPTION_REQUIRE,
             });
         }
-        if (!category) {
+        if (!categoryId) {
             return res.status(status_codes.BAD_REQUEST).json({
                 success: false,
                 status: status_codes.BAD_REQUEST,
                 message: status_message.CATEGORY_REQUIRE,
+            });
+        }
+        if (!subcategoryId) {
+            return res.status(status_codes.BAD_REQUEST).json({
+                success: false,
+                status: status_codes.BAD_REQUEST,
+                message: status_message.SUBCATEGORY_REQUIRE,
             });
         }
         const imgpath = req.file ? BASEURL + req.file.path.replace(/\\/g, '/') : ''
@@ -50,7 +57,8 @@ exports.addproduct = async (req, res) => {
             description,
             discountPrice,
             productimage: imgpath,
-            category
+            categoryId,
+            subcategoryId
         });
         if (!catdata) {
             return res.status(status_codes.BAD_REQUEST).json({
@@ -61,7 +69,7 @@ exports.addproduct = async (req, res) => {
         }
         return res.status(status_codes.CREATE).json({
             catdata,
-            success: false,
+            success: true,
             status: status_codes.CREATE,
             message: status_message.PRODUCT_CREATE_SUCCESS,
         });
@@ -79,7 +87,6 @@ exports.deleteproduct = async (req, res) => {
     try {
         const productId = req.query.productId;
         const checkmail = await productmodel.findById(productId);
-        console.log(checkmail.productimage);
 
         if (!checkmail) {
             return res.status(status_codes.NOT_FOUND).json({
@@ -97,7 +104,7 @@ exports.deleteproduct = async (req, res) => {
             }
         }
 
-        const deletedata = await productmodel.findByIdAndDelete(productId);
+        const deletedata = await productmodel.findByIdAndDelete(productId, { new: true });
         if (!deletedata) {
             return res.status(status_codes.BAD_REQUEST).json({
                 success: false,
@@ -106,6 +113,7 @@ exports.deleteproduct = async (req, res) => {
             });
         }
         return res.status(status_codes.OK).json({
+            deletedata,
             success: false,
             status: status_codes.OK,
             message: status_message.PRODUCT_DELETE_SUCCESS,
@@ -122,6 +130,7 @@ exports.deleteproduct = async (req, res) => {
 
 exports.updateproduct = async (req, res) => {
     try {
+        const { productname, price, description, discountPrice, productimage, categoryId, subcategoryId } = req.body;
         const productid = req.query.productId;
         const checkmail = await productmodel.findById(productid);
         if (!checkmail) {
@@ -131,9 +140,47 @@ exports.updateproduct = async (req, res) => {
                 message: status_message.USER_NOT_FOUND,
             });
         }
+        const productdata = {
+            productname: productname,
+            price: price,
+            description: description,
+            discountPrice: discountPrice,
+            productimage: req.file ? BASEURL + req.file.path.replace('/\\/g, ' / '') : '',
+            categoryId: categoryId,
+            subcategoryId: subcategoryId
+        }
+        const updatedata = await productmodel.findByIdAndUpdate(productid, productdata);
+        if (!updatedata) {
+            return res.status(status_codes.BAD_REQUEST).json({
+                success: false,
+                status: status_codes.BAD_REQUEST,
+                message: status_message.PRODUCT_NOT_UPDATE,
+            });
+        }
+        return res.status(status_codes.OK).json({
+            updatedata,
+            success: true,
+            status: status_codes.OK,
+            message: status_message.PRODUCT_UPDATE_SUCCESS,
+        });
 
     } catch (error) {
         console.error("deleteproduct error:", error);
+        return res.status(status_codes.INTERNAL_SERVER_ERROR).json({
+            success: false,
+            status: status_codes.INTERNAL_SERVER_ERROR,
+            message: "Internal server error",
+        });
+    }
+}
+
+exports.getallproduct = async (req, res) => {
+    try {
+        const productdata = await productmodel.find({ isActive: false });
+        console.log(productdata);
+
+    } catch (error) {   
+        console.error("getallproduct error:", error);
         return res.status(status_codes.INTERNAL_SERVER_ERROR).json({
             success: false,
             status: status_codes.INTERNAL_SERVER_ERROR,

@@ -6,10 +6,10 @@ const categoryRouts = require('../routs/category.routs');
 const subcategoryRouts = require('../routs/subcategory.routs');
 
 apiV1routs.use('/user', userRouts);
-apiV1routs.use('/product', productRouts);
 apiV1routs.use('/category', categoryRouts);
 apiV1routs.use('/subcategory', subcategoryRouts);
+apiV1routs.use('/product', productRouts);
 
 
-    
+
 module.exports = apiV1routs;

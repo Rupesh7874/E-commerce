@@ -1,6 +1,6 @@
 const express = require('express');
 const routs = express.Router();
-const { addproduct, deleteproduct, updateproduct } = require('../controllers/product.controller');
+const productcontroller = require('../controllers/product.controller');
 const multer = require('multer');
 
 //multer-code
@@ -16,9 +16,9 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage })
 
 
-routs.post('/addproduct', upload.single('productimage'), addproduct);
-routs.delete('/deleteproduct', deleteproduct);
-routs.put('/updateproduct', upload.single('productimage'), updateproduct);
-
+routs.post('/addproduct', upload.single('productimage'), productcontroller.addproduct);
+routs.delete('/deleteproduct', productcontroller.deleteproduct);
+routs.put('/updateproduct', upload.single('productimage'), productcontroller.updateproduct);
+routs.get('/getallproduct', productcontroller.getallproduct);
 
 module.exports = routs;
