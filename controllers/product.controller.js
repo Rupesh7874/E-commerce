@@ -176,10 +176,36 @@ exports.updateproduct = async (req, res) => {
 
 exports.getallproduct = async (req, res) => {
     try {
-        const productdata = await productmodel.find({ isActive: false });
-        console.log(productdata);
+        const page = parseInt(req.query.page) || 1;
+        const parpage = parseInt(req.query.parpage) || 10;
+        const search = req.query.search || '';
 
-    } catch (error) {   
+        const totaldata = await productmodel.countDocuments();
+        const productdata = await productmodel.find({
+            $or: [
+                { productname: { $regex: search, $options: "i" } }
+            ]
+        }, { isActive: false }).skip((page - 1) * parpage).limit(parpage).sort({ updatedAt: -1 });
+
+        if (!productdata) {
+            return res.status(status_codes.BAD_REQUEST).json({
+                success: false,
+                status: status_codes.BAD_REQUEST,
+                message: status_message.PRODUCT_NOT_FETCH,
+            });
+        }
+        return res.status(status_codes.OK).json({
+            productdata,
+            page: page,
+            parpage: parpage,
+            totalpage: Math.ceil(totaldata / parpage),
+            totaldata,
+            success: true,
+            status: status_codes.OK,
+            message: status_message.PRODUCT_GET_SUCCESS,
+        });
+
+    } catch (error) {
         console.error("getallproduct error:", error);
         return res.status(status_codes.INTERNAL_SERVER_ERROR).json({
             success: false,

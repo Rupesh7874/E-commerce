@@ -71,7 +71,9 @@ const status_message = {
     SUBCATEGORY_UPDATE_SUCCESS:"Subcategory data update successfully",
     SUBCATEGORY_IS_REQUIRE:"Subcategory id is require.",
     PRODUCT_NOT_UPDATE:"Product not update",
-    PRODUCT_UPDATE_SUCCESS:'Product update sucessfully.'
+    PRODUCT_UPDATE_SUCCESS:'Product update sucessfully.',
+    PRODUCT_NOT_FETCH:"Product not get.",
+    PRODUCT_GET_SUCCESS:"All product get sucessfully."
 }
 
 
