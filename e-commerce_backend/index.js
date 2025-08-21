@@ -1,4 +1,5 @@
 const express = require('express');
+const cors = require('cors');
 const app = express();
 const dotenv = require('dotenv');
 const http = require('http');
@@ -8,11 +9,16 @@ dotenv.config();
 require('./confige/db')();
 require('./utils/cron');
 
+// ✅ Enable CORS
+app.use(cors({
+    origin: "http://localhost:3000",  // allow frontend
+    methods: "GET,POST,PUT,DELETE",   // allowed methods
+    credentials: true                 // allow cookies if needed
+}));
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
-
-
 
 
 // Middleware to log request details after response is sent

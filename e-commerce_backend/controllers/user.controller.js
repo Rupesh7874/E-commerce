@@ -173,14 +173,13 @@ exports.verifyOTP = async (req, res) => {
         //     });
         // }
 
-        const data = chackmail.otp_history;
-        const otpdata = data.map(tt => {
-            tt.otp = null,
+        // const data = chackmail.otp_history;
+        chackmail.otp_history.forEach(tt => {
+            tt.otp = null;
             tt.expiration_Time = null;
-            return tt
+            tt.otp_verify = true;
         });
-        console.log("otpdata", otpdata);
-
+        // chackmail.otp_verify = true;
 
         // chackmail.otp_history.otp = null;
         // chackmail.otp_history.expiration_Time = null;
@@ -207,7 +206,7 @@ exports.ragister = async (req, res) => {
     try {
         const { name, email, password, phone, confirmpassword, age, gender, userimage } = req.body;
 
-        const checkragister = await user.findOne({ email: email, ragistered: true })
+        const checkragister = await user.findOne({ email: email, ragistered: true });
         if (checkragister) {
             return res.status(status_codes.BAD_REQUEST).json({
                 success: false,
@@ -271,8 +270,8 @@ exports.ragister = async (req, res) => {
                 message: status_message.GENDER_REQUIRED,
             });
         }
-        const checkmail = await user.findOne({ email: email, otp_verify: true });
-        if (!checkmail) {
+        const checkmail = await user.findOne({ email: email });
+        if (!checkmail || checkmail.otp_history.otp_verify === true) {
             return res.status(status_codes.NOT_FOUND).json({
                 success: false,
                 status: status_codes.NOT_FOUND,
