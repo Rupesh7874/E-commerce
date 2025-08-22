@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [message, setMessage] = useState("");
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -15,15 +16,33 @@ const Login = () => {
       });
 
       if (res.data.success) {
-        setMessage(res.data.message);
+        toast.success(res.data.message || "Login successful 🎉", {
+          onClose: () => {
+            // clear form after toast
+            setEmail("");
+            setPassword("");
+            window.location.href = "/Deshboard"; // redirect
+          },
+        });
         localStorage.setItem("token", res.data.token);
-        window.location.href = "/Deshboard"; // redirect
       } else {
-        setMessage(res.data.message || "Invalid credentials ❌");
+        toast.error(res.data.message || "Invalid credentials ❌", {
+          onClose: () => {
+            // clear form after toast
+            setEmail("");
+            setPassword("");
+          },
+        });
       }
     } catch (err) {
       console.error(err);
-      setMessage(err.response?.data?.message || "Server error ❌");
+      toast.error(err.response?.data?.message || "Server error ❌", {
+        onClose: () => {
+          // clear form after toast
+          setEmail("");
+          setPassword("");
+        },
+      });
     }
   };
 
@@ -36,7 +55,6 @@ const Login = () => {
           align-items: center;
           height: 100vh;
           width: 100%;
-          // background: linear-gradient(135deg, #6a11cb, #2575fc);
           font-family: Arial, sans-serif;
         }
 
@@ -103,12 +121,6 @@ const Login = () => {
           text-decoration: underline;
         }
 
-        .message {
-          margin-top: 10px;
-          font-size: 14px;
-          color: red;
-        }
-
         @keyframes fadeIn {
           from { opacity: 0; transform: translateY(-10px); }
           to { opacity: 1; transform: translateY(0); }
@@ -136,12 +148,13 @@ const Login = () => {
             <button type="submit">Login</button>
           </form>
 
-          {message && <div className="message">{message}</div>}
-
           <div className="login-footer">
             Don’t have an account? <a href="/register">Register</a>
           </div>
         </div>
+
+        {/* Toast notifications container */}
+        <ToastContainer position="top-right" autoClose={2000} />
       </div>
     </>
   );

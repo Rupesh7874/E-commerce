@@ -1,12 +1,22 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const OtpVerify = () => {
   const [email, setEmail] = useState("");
   const [otp, setOtp] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
+
+  // ✅ Auto-fill email from previous page if passed in navigate state
+  React.useEffect(() => {
+    if (location.state?.email) {
+      setEmail(location.state.email);
+    }
+  }, [location.state]);
 
   const handleVerify = async (e) => {
     e.preventDefault();
@@ -19,15 +29,30 @@ const OtpVerify = () => {
       });
 
       if (res.data.success) {
-        alert("✅ OTP Verified Successfully!");
-        // Redirect to Register page with email
-        navigate("/register", { state: { email } });
+        toast.success("✅ OTP Verified Successfully!", {
+          autoClose: 2000,
+          onClose: () => {
+            // Redirect to Register page with email
+            navigate("/register", { state: { email } });
+            setOtp(""); // reset only OTP field
+          },
+        });
       } else {
-        alert(res.data.message || "❌ Invalid OTP");
+        toast.error(res.data.message || "❌ Invalid OTP", {
+          autoClose: 2000,
+          onClose: () => {
+            setOtp(""); // reset OTP only, keep email
+          },
+        });
       }
     } catch (error) {
       console.error("OTP Verify Error:", error);
-      alert("⚠️ Something went wrong, please try again.");
+      toast.error("⚠️ Something went wrong, please try again.", {
+        autoClose: 2000,
+        onClose: () => {
+          setOtp(""); // reset OTP
+        },
+      });
     } finally {
       setLoading(false);
     }
@@ -90,6 +115,7 @@ const OtpVerify = () => {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
+              readOnly={!!location.state?.email} // lock email if passed from previous page
             />
             <input
               type="text"
@@ -104,6 +130,9 @@ const OtpVerify = () => {
           </form>
         </div>
       </div>
+
+      {/* ✅ Toast Container */}
+      <ToastContainer position="top-center" />
     </>
   );
 };

@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom"; 
+import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const Register = () => {
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
     name: "",
@@ -26,35 +26,56 @@ const Register = () => {
     setUserImage(e.target.files[0]);
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+ const resetForm = () => {
+  setFormData({
+    name: "",
+    email: "",
+    password: "",
+    confirmpassword: "",
+    phone: "",
+    age: "",
+    gender: "",
+  });
+  setUserImage(null);
+};
 
-    const data = new FormData();
-    for (let key in formData) {
-      data.append(key, formData[key]);
-    }
-    if (userimage) {
-      data.append("userimage", userimage);
-    }
+const handleSubmit = async (e) => {
+  e.preventDefault();
 
-    try {
-      const res = await axios.post(
-        "http://localhost:8000/api/v1/user/ragister",
-        data,
-        { headers: { "Content-Type": "multipart/form-data" } }
-      );
+  const data = new FormData();
+  for (let key in formData) {
+    data.append(key, formData[key]);
+  }
+  if (userimage) {
+    data.append("userimage", userimage);
+  }
 
-      if (res.data.success) {
-        toast.success(res.data.message || "Registration successful ✅");
-        setTimeout(() => navigate("/login"), 1500); // redirect after 1.5 sec
-      } else {
-        toast.error(res.data.message || "Registration failed ❌");
-      }
-    } catch (err) {
-      console.error("Register error:", err.response?.data || err.message);
-      toast.error(err.response?.data?.message || "Something went wrong ❌");
+  try {
+    const res = await axios.post(
+      "http://localhost:8000/api/v1/user/ragister",
+      data,
+      { headers: { "Content-Type": "multipart/form-data" } }
+    );
+
+    if (res.data.success) {
+      toast.success(res.data.message || "Registration successful ✅", {
+        onClose: resetForm, // reset after toast hides
+      });
+      setTimeout(() => navigate("/login"), 1500);
+    } else {
+      toast.error(res.data.message || "Registration failed ❌", {
+        onClose: resetForm,
+      });
     }
-  };
+  } catch (err) {
+    console.error("Register error:", err.response?.data || err.message);
+    toast.error(err.response?.data?.message || "Something went wrong ❌", {
+      onClose: resetForm,
+    });
+  }
+};
+
+
 
   return (
     <>

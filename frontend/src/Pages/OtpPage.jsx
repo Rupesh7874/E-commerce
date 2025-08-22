@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Otp = () => {
   const [email, setEmail] = useState("");
@@ -18,14 +20,24 @@ const Otp = () => {
       });
 
       if (res.data.success) {
-        // ✅ Redirect to VerifyOtp page with email
-        navigate("/otpverify", { state: { email } });
+        toast.success(res.data.message || "OTP sent successfully ✅", {
+          onClose: () => {
+            // clear form when toast closes
+            setEmail("");
+            // ✅ Redirect to VerifyOtp page with email
+            navigate("/otpverify", { state: { email } });
+          },
+        });
       } else {
-        alert("❌ Failed to send OTP");
+        toast.error(res.data.message || "❌ Failed to send OTP", {
+          onClose: () => setEmail(""),
+        });
       }
     } catch (error) {
       console.error(error);
-      alert("⚠️ Something went wrong, please try again");
+      toast.error(error.response?.data?.message || "⚠️ Something went wrong", {
+        onClose: () => setEmail(""),
+      });
     } finally {
       setLoading(false);
     }
@@ -95,6 +107,9 @@ const Otp = () => {
           </form>
         </div>
       </div>
+
+      {/* Toast container */}
+      <ToastContainer position="top-right" autoClose={2000} />
     </>
   );
 };
