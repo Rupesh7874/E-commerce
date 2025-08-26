@@ -73,7 +73,9 @@ const status_message = {
     PRODUCT_NOT_UPDATE:"Product not update",
     PRODUCT_UPDATE_SUCCESS:'Product update sucessfully.',
     PRODUCT_NOT_FETCH:"Product not get.",
-    PRODUCT_GET_SUCCESS:"All product get sucessfully."
+    PRODUCT_GET_SUCCESS:"All product get sucessfully.",
+    PRODUCT_ALREADY_EXISCT_IN_CART:"Product already exisct in cart please choose another product.",
+    PRODUCT_NOT_ADD_IN_CART:"Product not add in cart."
 }
 
 

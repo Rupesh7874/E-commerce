@@ -74,7 +74,7 @@ exports.getallSubcategory = async (req, res) => {
             $or: [
                 { subcategory_name: { $regex: search, $options: "i" } }
             ]
-        }).skip((page - 1) * parpage).limit(parpage).sort({ createdAt: -1 })
+        }).populate("categoryId","category_name -_id").skip((page - 1) * parpage).limit(parpage).sort({ createdAt: -1 })
 
         if (!subcatdata) {
             return res.status(status_codes.BAD_REQUEST).json({

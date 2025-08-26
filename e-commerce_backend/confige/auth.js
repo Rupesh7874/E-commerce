@@ -11,8 +11,9 @@ function Verifytoken(req, res, next) {
 
     try {
         const verifyToken = jwt.verify(token.split('Bearer ')[1], 'abcdef123');
-        console.log(verifyToken);
-        
+        // console.log("verifyToken",verifyToken);
+        req.userId = verifyToken.data
+
     } catch (error) {
         return res.status(status_codes.UNAUTHORIZED).json({ success: false, status: status_codes.UNAUTHORIZED, message: status_message.INVALID_TOKEN });
     }

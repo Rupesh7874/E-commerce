@@ -185,7 +185,7 @@ exports.getallproduct = async (req, res) => {
             $or: [
                 { productname: { $regex: search, $options: "i" } }
             ]
-        }, { isActive: false }).skip((page - 1) * parpage).limit(parpage).sort({ updatedAt: -1 });
+        }, { isActive: false }).populate("categoryId", "category_name -_id").populate("subcategoryId", "subcategory_name -_id").skip((page - 1) * parpage).limit(parpage).sort({ updatedAt: -1 });
 
         if (!productdata) {
             return res.status(status_codes.BAD_REQUEST).json({
