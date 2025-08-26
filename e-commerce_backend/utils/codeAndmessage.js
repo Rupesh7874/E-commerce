@@ -75,7 +75,8 @@ const status_message = {
     PRODUCT_NOT_FETCH:"Product not get.",
     PRODUCT_GET_SUCCESS:"All product get sucessfully.",
     PRODUCT_ALREADY_EXISCT_IN_CART:"Product already exisct in cart please choose another product.",
-    PRODUCT_NOT_ADD_IN_CART:"Product not add in cart."
+    PRODUCT_NOT_EXISCT_IN_CART:"Product not exisct in cart.",
+    CART_PRODUCT_NOT_DELETE:"Cart product not delete"
 }
 
 

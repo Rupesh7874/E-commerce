@@ -21,7 +21,7 @@ exports.addaddcart = async (req, res) => {
             return res.status(status_codes.BAD_REQUEST).json({
                 success: false,
                 status: status_codes.BAD_REQUEST,
-                message: status_message.PRODUCT_NOT_ADD_IN_CART
+                message: status_message.PRODUCT_NOT_EXISCT_IN_CART
             });
         }
         return res.status(status_codes.CREATE).json({
@@ -29,6 +29,42 @@ exports.addaddcart = async (req, res) => {
             success: true,
             status: status_codes.CREATE,
             message: status_message.CATEGORY_CREATE_SUCCESS
+        });
+    } catch (error) {
+        console.error("addaddcart error:", error);
+        return res.status(status_codes.INTERNAL_SERVER_ERROR).json({
+            success: false,
+            status: status_codes.INTERNAL_SERVER_ERROR,
+            message: "Internal server error",
+        });
+    }
+}
+
+exports.deleteaddcart = async (req, res) => {
+    try {
+        const userId = req.userId;
+        const productId = req.query.productId;
+
+        const checkcart = await addtocartmodel.findOne({ userId, productId });
+        if (!checkcart) {
+            return res.status(status_codes.BAD_REQUEST).json({
+                success: false,
+                status: status_codes.BAD_REQUEST,
+                message: status_message.PRODUCT_NOT_EXISCT_IN_CART
+            });
+        }
+        const deletecart = await addtocartmodel.deleteOne(checkcart);
+        if (!deletecart) {
+            return res.status(status_codes.BAD_REQUEST).json({
+                success: false,
+                status: status_codes.BAD_REQUEST,
+                message: status_message.CART_PRODUCT_NOT_DELETE
+            });
+        }
+        return res.status(status_codes.OK).json({
+            success: true,
+            status: status_codes.OK,
+            message: status_message.CATEGORY_DELETE_SUCCESS
         });
     } catch (error) {
         console.error("addaddcart error:", error);
