@@ -1,8 +1,10 @@
 const { status_codes, status_message } = require('../utils/codeAndmessage');
 const productmodel = require('../models/product.model');
+const addtocartmodel = require('../models/addtocart.model');
 const BASEURL = require('../utils/constant');
 const path = require('path');
 const fs = require('fs');
+const product = require('../models/product.model');
 
 exports.addproduct = async (req, res) => {
     try {
@@ -176,17 +178,24 @@ exports.updateproduct = async (req, res) => {
 
 exports.getallproduct = async (req, res) => {
     try {
+        const userId = req.userId;
         const page = parseInt(req.query.page) || 1;
         const parpage = parseInt(req.query.parpage) || 10;
         const search = req.query.search || '';
 
         const totaldata = await productmodel.countDocuments();
+        const cartdata = await addtocartmodel.find({ userId }, "productId -_id");
+        const cartproductId = cartdata.map(itam => itam.productId.toString())
+
+
+
         const productdata = await productmodel.find({
             $or: [
                 { productname: { $regex: search, $options: "i" } }
             ]
         }, { isActive: false }).populate("categoryId", "category_name -_id").populate("subcategoryId", "subcategory_name -_id").skip((page - 1) * parpage).limit(parpage).sort({ updatedAt: -1 });
 
+        
         if (!productdata) {
             return res.status(status_codes.BAD_REQUEST).json({
                 success: false,
@@ -194,8 +203,14 @@ exports.getallproduct = async (req, res) => {
                 message: status_message.PRODUCT_NOT_FETCH,
             });
         }
+
+        const enrichedProducts = productdata.map(product => ({
+            ...product.toObject(),
+            incart: cartproductId.includes(product._id.toString())
+        }));
+        
         return res.status(status_codes.OK).json({
-            productdata,
+            productdata: enrichedProducts,
             page: page,
             parpage: parpage,
             totalpage: Math.ceil(totaldata / parpage),

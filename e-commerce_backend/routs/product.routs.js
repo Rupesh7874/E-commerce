@@ -2,6 +2,7 @@ const express = require('express');
 const routs = express.Router();
 const productcontroller = require('../controllers/product.controller');
 const multer = require('multer');
+const Verifytoken = require('../confige/auth');
 
 //multer-code
 const storage = multer.diskStorage({
@@ -19,6 +20,6 @@ const upload = multer({ storage: storage })
 routs.post('/addproduct', upload.single('productimage'), productcontroller.addproduct);
 routs.delete('/deleteproduct', productcontroller.deleteproduct);
 routs.put('/updateproduct', upload.single('productimage'), productcontroller.updateproduct);
-routs.get('/getallproduct', productcontroller.getallproduct);
+routs.get('/getallproduct',Verifytoken, productcontroller.getallproduct);
 
 module.exports = routs;

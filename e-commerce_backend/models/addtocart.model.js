@@ -11,6 +11,10 @@ const addtocartschema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "product",
         required: true
+    },
+    addcart: {
+        type: Boolean,
+        default: false
     }
 })
 

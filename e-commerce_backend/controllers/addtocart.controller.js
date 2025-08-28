@@ -15,13 +15,14 @@ exports.addaddcart = async (req, res) => {
         }
         const cartdata = await addtocartmodel.create({
             productId,
-            userId
+            userId,
+            addcart:true
         });
         if (!cartdata) {
             return res.status(status_codes.BAD_REQUEST).json({
                 success: false,
                 status: status_codes.BAD_REQUEST,
-                message: status_message.PRODUCT_NOT_EXISCT_IN_CART
+                message: status_message.PRODUCT_NOT_ADD_IN_CART
             });
         }
         return res.status(status_codes.CREATE).json({
@@ -32,6 +33,34 @@ exports.addaddcart = async (req, res) => {
         });
     } catch (error) {
         console.error("addaddcart error:", error);
+        return res.status(status_codes.INTERNAL_SERVER_ERROR).json({
+            success: false,
+            status: status_codes.INTERNAL_SERVER_ERROR,
+            message: "Internal server error",
+        });
+    }
+}
+
+exports.getusercart = async (req, res) => {
+    try {
+        const userId = req.userId;
+        const checkcart = await addtocartmodel.find({ userId }).select('-userId ').populate("productId", "productname price description discountPrice productimage");
+        if (!checkcart) {
+            return res.status(status_codes.BAD_REQUEST).json({
+                success: false,
+                status: status_codes.BAD_REQUEST,
+                message: status_message.PRODUCT_NOT_EXISCT_IN_CART
+            });
+        }
+        return res.status(status_codes.OK).json({
+            data:checkcart,
+            success: true,
+            status: status_codes.OK,
+            message: status_message.CARTDATA_GET_SECESS
+        });
+
+    } catch (error) {
+        console.error("getusercart error:", error);
         return res.status(status_codes.INTERNAL_SERVER_ERROR).json({
             success: false,
             status: status_codes.INTERNAL_SERVER_ERROR,
